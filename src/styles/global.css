@@ -1,1 +1,105 @@
 @import "tailwindcss";
+
+/* ==== Base & tokens ==== */
+:root {
+  --ring: 32 100% 67%;
+  --brand-from: 99 102 241;   /* indigo-500 */
+  --brand-to:  34 211 238;    /* cyan-400   */
+  --brand-hot: 244 63 94;     /* rose-500   */
+}
+
+html { scroll-behavior: smooth; }
+body {
+  @apply min-h-screen bg-slate-950 text-slate-100 antialiased;
+  background-image:
+    radial-gradient(1200px 600px at 10% -10%, rgba(99,102,241,.15), transparent 60%),
+    radial-gradient(1000px 500px at 110% 0%, rgba(34,211,238,.12), transparent 60%);
+}
+
+/* ==== Animations ==== */
+@keyframes float {
+  0%,100% { transform: translateY(0) }
+  50% { transform: translateY(-6px) }
+}
+@keyframes shimmer {
+  0% { background-position: 0% 50% }
+  100% { background-position: 200% 50% }
+}
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(12px) }
+  to   { opacity: 1; transform: translateY(0) }
+}
+
+/* ==== Reusables ==== */
+@layer components {
+  .container-narrow { @apply max-w-3xl mx-auto px-6; }
+
+  .heading-hero { @apply text-4xl md:text-5xl font-extrabold tracking-tight; }
+  .heading-2   { @apply text-2xl md:text-3xl font-bold mb-4; }
+  .muted       { @apply text-slate-400; }
+
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 transition focus:outline-none;
+    @apply bg-white/10 hover:bg-white/15;
+    box-shadow: 0 0 0 0 rgba(255,255,255,0);
+  }
+  .btn-primary {
+    @apply text-white;
+    background-image: linear-gradient(90deg,
+      rgb(var(--brand-from)) 0%,
+      rgb(56 189 248) 50%,
+      rgb(var(--brand-to)) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2.5s linear infinite paused;
+  }
+  .btn-primary:hover { animation-play-state: running; }
+  .btn-ghost { @apply bg-transparent border border-white/10 hover:border-white/20; }
+
+  .chip { @apply text-xs md:text-sm px-2.5 py-1 rounded-full bg-white/10 border border-white/10; }
+
+  .card {
+    @apply rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur p-5 shadow-sm;
+    transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    background-color: rgba(255,255,255,0.08);
+    box-shadow: 0 10px 30px -15px rgba(0,0,0,.6);
+  }
+
+  .links-row a { @apply underline hover:opacity-90; }
+
+  /* Hero gradient text */
+  .brand-gradient {
+    background-image: linear-gradient(90deg,
+      rgb(var(--brand-from)) 0%,
+      rgb(56 189 248) 50%,
+      rgb(var(--brand-to)) 100%);
+    @apply text-transparent bg-clip-text;
+  }
+
+  /* Avatar frame */
+  .avatar {
+    @apply relative w-28 h-28 md:w-32 md:h-32 rounded-2xl overflow-hidden border border-white/10 shadow;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(244,63,94,.45), transparent 40%),
+      radial-gradient(circle at 100% 0%, rgba(34,211,238,.35), transparent 35%),
+      rgba(255,255,255,.04);
+  }
+  .avatar img { @apply w-full h-full object-cover; }
+  .avatar:hover { animation: float 4s ease-in-out infinite; }
+
+  /* Reveal helper */
+  .reveal { animation: reveal-up .6s ease forwards; opacity: 0; }
+}
+
+/* Focus ring accesible */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

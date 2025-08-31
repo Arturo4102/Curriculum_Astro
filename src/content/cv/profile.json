@@ -1,0 +1,38 @@
+{
+  "name": "Arturo Arellano Romo",
+  "role": "Frontend / Full-Stack Developer",
+  "location": "Córdoba, España",
+  "email": "arturoarellano4102@gmail.com",
+  "links": [
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/arturo-arellano-romo/" },
+    { "label": "GitHub", "url": "https://github.com/Arturo4102" }
+  ],
+  "summary": "Desarrollador Frontend con base Full-Stack, enfocado en entregar valor rápido con interfaces claras y medibles. Experiencia real construyendo dashboards con React+TypeScript (ApexCharts), tablas eficientes y flujos CRUD completos. Me muevo bien entre UI, datos y negocio: convierto requisitos en producto mínimo viable, itero con métricas y documento decisiones.",
+  "highlights": [
+    "Desarrollo end‑to‑end de app web con React+TypeScript (gráficas, tablas, modales y registros de eventos/activos/fallos).",
+    "Orientación a producto: priorización de MVP y gestión de tareas.",
+    "Buenas prácticas con Git/GitHub (issues, ramas y PRs).",
+    "Trabajo en equipo y adaptación a equipos cambiantes."
+  ],
+  "softSkills": ["Resolución de problemas", "Comunicación", "Trabajo en equipo", "Gestión del tiempo", "Aprendizaje continuo"],
+  "skills": ["HTML", "CSS", "React", "TypeScript", "Git", "Github", "Astro", "Jira", "Notion", "ApexCharts"],
+  "featuredProjects": ["Predisolia"],
+  "experience": [
+    {
+      "company": "QUANTIA Ingeniería y Consultoría",
+      "role": "Prácticas",
+      "start": "2025-03",
+      "end": "presente",
+      "bullets": [
+        "Implementación del Frontend con React+TypeScript: gráficas (ApexCharts), tablas, modales y formularios.",
+        "Desarrollo del Backend y cohesión Front/Back para flujos de eventos y activos.",
+        "Diseño de estructuras de datos y registro de eventos, activos y fallos.",
+        "Priorización de objetivos del MVP y gestión temporal de tareas.",
+        "Colaboración y adaptación a equipo de trabajo fluctuante."
+      ]
+    }
+  ],
+  "education": [
+    { "school": "Universidad de Granada", "degree": "Grado en Ingeniería Informática", "year": "2020" }
+  ]
+}

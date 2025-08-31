@@ -1,11 +1,152 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import { getEntry, getCollection, type CollectionEntry } from "astro:content";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const profile = await getEntry("cv", "profile");
+const projects = await getCollection("projects");
+
+// Datos tipados/normalizados
+const featuredProjectsArray = (profile?.data.featuredProjects ?? []) as string[];
+const links = (profile?.data.links ?? []) as Array<{ label: string; url: string }>;
+const skills = (profile?.data.skills ?? []) as string[];
+const softSkills = (profile?.data.softSkills ?? []) as string[];
+const highlights = (profile?.data.highlights ?? []) as string[];
+const experience = (profile?.data.experience ?? []) as Array<{
+  company: string; role: string; start: string; end?: string; bullets: string[];
+}>;
+const education = (profile?.data.education ?? []) as Array<{ school: string; degree: string; year: string; }>;
+
+const ordered = projects.sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+const isFeatured = (p: CollectionEntry<"projects">) => featuredProjectsArray.includes(p.slug);
+const featured = ordered.filter(isFeatured);
+const rest = ordered.filter((p) => !isFeatured(p));
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title={`${profile?.data.name} — ${profile?.data.role}`}
+  description={profile?.data.summary ?? `${profile?.data.name} — ${profile?.data.role}`}
+  ogImage="/og.png"
+>
+  <section class="container-narrow py-12 space-y-10">
+    <!-- HERO -->
+    <header class="mb-2 reveal" style="animation-delay:80ms">
+      <div class="flex items-center gap-5">
+        <!-- Foto del perfil (súbela como /me.jpg o ajusta src) -->
+        <div class="avatar shrink-0">
+          <img src="/me.jpg" alt={`Foto de ${profile?.data.name ?? "mi perfil"}`} loading="eager" decoding="async" />
+        </div>
+        <div>
+          <h1 class="heading-hero">
+            {profile?.data.name}
+            <span class="block brand-gradient">{profile?.data.role}</span>
+          </h1>
+          <p class="muted mt-1">{profile?.data.location}</p>
+        </div>
+      </div>
+
+      <div class="mt-4 flex flex-wrap gap-3 links-row">
+        <a href={`mailto:${profile?.data.email}`} class="btn btn-ghost">{profile?.data.email}</a>
+        {links.map((l) => (
+          <a class="btn btn-ghost" href={l.url} target="_blank" rel="noreferrer">{l.label}</a>
+        ))}
+      </div>
+
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a class="btn btn-primary" href="#proyectos">Ver proyectos</a>
+        <a class="btn" href="#cv">Experiencia</a>
+      </div>
+    </header>
+
+    <!-- Resumen con copy más persuasivo (desde profile.json) -->
+    {profile?.data.summary && (
+      <section class="reveal" style="animation-delay:160ms">
+        <h2 class="heading-2">Resumen</h2>
+        <p class="text-slate-300 leading-relaxed">{profile?.data.summary}</p>
+      </section>
+    )}
+
+    <!-- Puntos destacados -->
+    {highlights.length > 0 && (
+      <section class="reveal" style="animation-delay:220ms">
+        <h2 class="heading-2">Puntos destacados</h2>
+        <ul class="list-disc pl-6 space-y-1 text-slate-200">
+          {highlights.map((item) => (<li>{item}</li>))}
+        </ul>
+      </section>
+    )}
+
+    <!-- Habilidades -->
+    <section class="reveal" style="animation-delay:280ms">
+      <h2 class="heading-2">Habilidades</h2>
+      <div class="flex flex-wrap gap-2">
+        {skills.map((s) => (<span class="chip">{s}</span>))}
+      </div>
+      {softSkills.length > 0 && (
+        <div>
+          <h3 class="mt-6 mb-2 text-xl font-semibold">Habilidades blandas</h3>
+          <div class="flex flex-wrap gap-2">
+            {softSkills.map((s) => (<span class="chip">{s}</span>))}
+          </div>
+        </div>
+      )}
+    </section>
+
+    <!-- Experiencia -->
+    <section id="cv" class="reveal" style="animation-delay:320ms">
+      <h2 class="heading-2">Experiencia</h2>
+      <div class="space-y-6">
+        {experience.map((exp) => (
+          <article class="card">
+            <div class="flex items-baseline justify-between gap-4">
+              <h3 class="text-lg font-semibold">{exp.role}</h3>
+              <span class="muted text-sm">{exp.start} – {exp.end ?? "actualidad"}</span>
+            </div>
+            <div class="muted">{exp.company}</div>
+            <ul class="list-disc pl-6 mt-2 space-y-1 text-slate-200">
+              {exp.bullets.map((b) => (<li>{b}</li>))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Proyectos -->
+    <section id="proyectos" class="reveal" style="animation-delay:360ms">
+      <h2 class="heading-2">Proyectos</h2>
+      <div class="grid gap-6 md:grid-cols-2">
+        {[...featured, ...rest].map((p) => (
+          <article class="card">
+            <h3 class="text-lg font-semibold">{p.data.title}</h3>
+            <p class="muted mt-1">{p.data.description}</p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              {p.data.tech?.map((t) => (<span class="chip">{t}</span>))}
+            </div>
+            <div class="mt-4 flex gap-4 links-row">
+              {p.data.repo && (<a href={p.data.repo} target="_blank" rel="noreferrer">Repositorio</a>)}
+              {p.data.demo && (<a href={p.data.demo} target="_blank" rel="noreferrer">Demo</a>)}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Educación -->
+    <section class="reveal" style="animation-delay:420ms">
+      <h2 class="heading-2">Educación</h2>
+      <ul class="space-y-1">
+        {education.map((e) => (
+          <li><strong>{e.degree}</strong> — {e.school} ({e.year})</li>
+        ))}
+      </ul>
+    </section>
+  </section>
+
+  <!-- Revelar on-intersection (sin dependencias) -->
+  <script is:inline>
+    const els = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.style.opacity = 1; });
+    }, { threshold: 0.12 });
+    els.forEach(el => io.observe(el));
+  </script>
 </Layout>
