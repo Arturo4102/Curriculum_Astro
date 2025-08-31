@@ -1,6 +1,6 @@
 ---
-title: "AppPrueba — Ionic/Angular (UGR DGP)"
-description: "Aplicación móvil híbrida para la práctica de DGP (UGR) construida con Ionic + Angular y Capacitor; integra configuración Android/iOS, Firebase y tooling completo."
+title: "Aplicación Web Accesible — Ionic/Angular"
+description: "App híbrida con Ionic+Angular y Capacitor: integración Firebase, tooling y estructura Android/iOS. Práctica de DGP orientada a accesibilidad para personas con discapacidad física, cognitiva o mental."
 tech:
   - Ionic
   - Angular
@@ -10,8 +10,10 @@ tech:
   - SCSS
 featured: false
 order: 60
-cover: ""
-repo: "https://github.com/Arturo4102/AppPrueba"
+cover: "/Aplicacion_Accesible.jpg"
+gallery:
+  - "/Aplicacion_Accesible.jpg"
+repo: "https://github.com/Arturo4102/Aplicacion-Web-Accesible"
 demo: ""
 ---
 Proyecto académico con estructura **Android/iOS**, tooling de **Capacitor**, pruebas con **Karma**, y despliegue apoyado en **Firebase**.  

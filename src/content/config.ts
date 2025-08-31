@@ -19,6 +19,8 @@ export const collections = {
       demo: z.string().optional(), // URL de la demo (opcional)
       featured: z.boolean().default(false), // Si el proyecto es destacado
       order: z.number().default(0), // Orden de aparición
+      gallery: z.array(z.string()).optional(), // Galería opcional de imágenes por proyecto
+      hidden: z.boolean().optional(), // <-- añadido para ocultar proyectos
     }),
   }),
   // Colección 'cv': almacena los datos del currículum.

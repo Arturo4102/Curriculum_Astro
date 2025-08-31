@@ -1,0 +1,124 @@
+---
+interface Props {
+  class?: string;
+  lines: string[];
+  startDelay?: number;
+  durationPerWord?: number;
+  staggerPerWord?: number;
+  lineDelay?: number;
+  fromBlurPx?: number;
+  fromTranslateYPx?: number;
+}
+const {
+  class: klass = "",
+  lines,
+  startDelay = 0,
+  durationPerWord = 900,
+  staggerPerWord = 80,
+  lineDelay = 300,
+  fromBlurPx = 16,
+  fromTranslateYPx = 14,
+} = Astro.props as Props;
+
+const tokensPerLine = lines.map(l => l.split(/(\s+)/));
+---
+
+<h1 class={`${klass}`} aria-label={lines.join(" ")}>
+  <span aria-hidden="true">
+    {tokensPerLine.map((tokens, lineIdx) => (
+      <span class="block">
+        {tokens.map((t) =>
+          /^\s+$/.test(t) ? <span>&nbsp;</span> : <span data-word data-line-index={lineIdx} class="inline-block will-change-transform">{t}</span>
+        )}
+      </span>
+    ))}
+  </span>
+</h1>
+
+<script define:vars={{ startDelay, durationPerWord, staggerPerWord, lineDelay, fromBlurPx, fromTranslateYPx }}>
+  (function(){
+    try {
+      const root = document.currentScript?.previousElementSibling;
+      if (!root) {
+        console.warn("AnimatedHeading: Could not find root element");
+        return;
+      }
+      
+      const words = Array.from(root.querySelectorAll('[data-word]'));
+      if (words.length === 0) {
+        console.warn("AnimatedHeading: No words found to animate");
+        return;
+      }
+      
+      // Inicializar todos los elementos con estados iniciales
+      words.forEach(w => {
+        try {
+          w.style.opacity = '0';
+          w.style.filter = `blur(${fromBlurPx}px)`;
+          w.style.transform = `translateY(${fromTranslateYPx}px)`;
+        } catch(e) {
+          console.warn("Error setting initial styles:", e);
+          w.style.opacity = '1'; // Asegurar visibilidad si falla
+        }
+      });
+      
+      // Fallback para navegadores sin IntersectionObserver
+      if (!('IntersectionObserver' in window)) {
+        words.forEach(w => {
+          w.style.opacity = '1';
+          w.style.filter = 'none';
+          w.style.transform = 'none';
+        });
+        return;
+      }
+      
+      // Agrupar palabras por línea para animar
+      const map = new Map();
+      words.forEach(w => {
+        const i = Number(w.getAttribute('data-line-index') || 0);
+        const arr = map.get(i) || [];
+        if (!map.has(i)) map.set(i, arr);
+        arr.push(w);
+      });
+      
+      // Observar y animar cuando sea visible
+      const io = new IntersectionObserver((entries) => {
+        if (!entries.some(e => e.isIntersecting)) return;
+        
+        map.forEach((arr, i) => {
+          arr.forEach((w, j) => {
+            try {
+              const delay = startDelay + i * lineDelay + j * staggerPerWord;
+              w.animate([
+                {opacity: 0, filter: `blur(${fromBlurPx}px)`, transform: `translateY(${fromTranslateYPx}px)`},
+                {opacity: 1, filter: 'blur(0px)', transform: 'translateY(0)'}
+              ], {
+                duration: durationPerWord, 
+                delay, 
+                easing: 'cubic-bezier(0.22,1,0.36,1)', 
+                fill: 'forwards'
+              });
+            } catch(e) {
+              console.warn("Error animating word:", e);
+              w.style.opacity = '1';
+              w.style.filter = 'none';
+              w.style.transform = 'none';
+            }
+          });
+        });
+        
+        io.disconnect();
+      }, { threshold: 0.2 });
+      
+      io.observe(root);
+    } catch(err) {
+      console.error("AnimatedHeading error:", err);
+      // Si todo falla, mostrar el contenido
+      document.querySelectorAll('[data-word]').forEach(el => {
+        el.style.opacity = '1';
+        el.style.filter = 'none';
+        el.style.transform = 'none';
+      });
+    }
+  })();
+</script>

@@ -1,0 +1,23 @@
+---
+interface Slide { src: string; caption?: string; from?: string; to?: string }
+interface Props { images: Slide[]; class?: string }
+
+const placeholder = "/993506.png";
+
+const { images, class: klass = "" } = Astro.props as Props;
+const slides = (images?.length ? images : [{ src: placeholder }]).map(s => ({ ...s, src: s.src || placeholder }));
+---
+<div class={`h-full w-full overflow-x-auto overflow-y-hidden rounded-[1.35rem] bg-black/40 scroll-smooth ${klass}`} aria-label="Project showcase">
+  <div class="flex h-full min-w-full snap-x snap-mandatory gap-4 p-2">
+    {slides.map((img) => (
+      <div class="relative h-full min-w-full snap-center rounded-[1.2rem] border border-white/10" style={`background-image:linear-gradient(135deg, ${img.from ?? '#0f172a'}, ${img.to ?? '#6d28d9'})`}>
+        <div class="relative h-full w-full overflow-hidden rounded-[1.1rem]">
+          <img src={img.src} alt={img.caption || "Showcase image"} class="object-cover w-full h-full" loading="lazy" decoding="async"
+               onerror={`this.onerror=null;this.src='${placeholder}';`} />
+          <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/20"></div>
+        </div>
+        {img.caption && <div class="pointer-events-none absolute bottom-3 left-3 rounded-full bg-black/40 px-3 py-1 text-xs text-white backdrop-blur">{img.caption}</div>}
+      </div>
+    ))}
+  </div>
+</div>

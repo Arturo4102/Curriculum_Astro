@@ -1,6 +1,6 @@
 ---
 title: "Erascape — Videojuego en Unity"
-description: "Copia del proyecto de videojuego desarrollado en Unity junto con dos estudiantes italianos; gameplay y assets en C#/ShaderLab."
+description: "Juego 3D colaborativo en Unity: gameplay en C#, materiales y shaders (ShaderLab/HLSL). Coordinación internacional y control de versiones."
 tech:
   - Unity
   - C#
@@ -8,7 +8,9 @@ tech:
   - HLSL
 featured: false
 order: 70
-cover: ""
+cover: "/Videojuego.png"
+gallery:
+  - "/Videojuego.png"
 repo: "https://github.com/Arturo4102/Videojuego-Unity"
 demo: ""
 ---

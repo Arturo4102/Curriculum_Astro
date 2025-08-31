@@ -1,0 +1,65 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  cover?: string;
+  tags?: string[];
+  repo?: string;
+  demo?: string;
+  gradientFrom?: string;
+  gradientTo?: string;
+}
+
+const placeholder = "/993506.png";
+
+const {
+  title,
+  subtitle = "",
+  cover = placeholder,
+  tags = [],
+  repo,
+  demo,
+  gradientFrom = "#0f172a",
+  gradientTo = "#6d28d9",
+} = Astro.props as Props;
+
+// Use placeholder if cover is empty or undefined
+const imageSrc = cover && cover.trim() !== "" ? cover : placeholder;
+---
+<article class="relative w-full">
+  <div
+    class="gradient-border rounded-3xl"
+    style={`background-image:linear-gradient(135deg, ${gradientFrom}, ${gradientTo})`}
+  >
+    <div class="inner relative overflow-hidden rounded-[1.35rem] bg-black">
+      <button
+        type="button"
+        class="group block w-full text-left focus:outline-none"
+        data-lightbox={imageSrc}
+        data-caption={`${title}${subtitle ? ' — ' + subtitle : ''}`}
+        aria-label={`Ampliar imagen de ${title}`}
+      >
+        <img src={imageSrc} alt={title} class="w-full h-[56vh] md:h-[62vh] object-cover transition group-hover:scale-[1.02]" loading="lazy" decoding="async"
+             onerror={`this.onerror=null;this.src='${placeholder}';`} />
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/30"></div>
+      </button>
+
+      <div class="absolute left-4 top-4 flex flex-wrap gap-2">
+        {tags.map((t)=>(<span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">{t}</span>))}
+      </div>
+
+      <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div class="case-caption max-w-[80%] sm:max-w-[70%]">
+            <h3 class="text-lg font-semibold sm:text-xl">{title}</h3>
+            {subtitle && <p class="text-sm opacity-90">{subtitle}</p>}
+          </div>
+          <div class="flex gap-2">
+            {repo && <a class="case-action" href={repo} target="_blank" rel="noreferrer">Repo →</a>}
+            {demo && <a class="btn bg-white/10 hover:bg-white/20" href={demo} target="_blank" rel="noreferrer">Demo →</a>}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>

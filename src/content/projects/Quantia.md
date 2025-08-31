@@ -1,6 +1,6 @@
 ---
 title: "Plataforma de Predicción y Gestión de Activos Solares"
-description: "Aplicación web para monitorizar activos de una planta solar, registrar eventos y mantener histórico de fallos, incluyendo visualizaciones con ApexCharts y tablas filtrables."
+description: "Dashboard de monitorización fotovoltaica con React+TypeScript: gráficas (ApexCharts), tablas filtrables y flujos CRUD. Enfoque en UX, métricas y entregas iterativas."
 tech:
   - React
   - TypeScript
@@ -8,7 +8,9 @@ tech:
   - CSS
   - Git
   - Github
-cover: ""
+cover: "/Predisolia.png"
+gallery:
+  - "/Predisolia.png"
 repo: "https://github.com/Arturo4102"
 demo: ""
 featured: true

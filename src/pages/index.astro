@@ -1,152 +1,186 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { getEntry, getCollection, type CollectionEntry } from "astro:content";
+import AnimatedHeading from "../components/ui/AnimatedHeading.astro";
+import RevealOnView from "../components/ui/RevealOnView.astro";
+import CaseStudy from "../components/CaseStudy.astro";
+import ShowcaseCarousel from "../components/ShowcaseCarousel.astro";
+import { getEntry, getCollection } from "astro:content";
 
-const profile = await getEntry("cv", "profile");
-const projects = await getCollection("projects");
+const profile = await getEntry("cv", "profile")?.catch(() => null);
+const name = profile?.data?.name ?? "Arturo Arellano Romo";
+const role = profile?.data?.role ?? "Frontend / Full-Stack Developer";
+const location = profile?.data?.location ?? "España";
+const email = profile?.data?.email ?? "arturoarellano4102@gmail.com";
+// extrae redes sociales desde profile.json
+const links = profile?.data?.links ?? [];
+const linkedin = links.find(l => /linkedin/i.test(l.label))?.url;
+const github = links.find(l => /git(hub)?/i.test(l.label))?.url;
 
-// Datos tipados/normalizados
-const featuredProjectsArray = (profile?.data.featuredProjects ?? []) as string[];
-const links = (profile?.data.links ?? []) as Array<{ label: string; url: string }>;
-const skills = (profile?.data.skills ?? []) as string[];
-const softSkills = (profile?.data.softSkills ?? []) as string[];
-const highlights = (profile?.data.highlights ?? []) as string[];
-const experience = (profile?.data.experience ?? []) as Array<{
-  company: string; role: string; start: string; end?: string; bullets: string[];
-}>;
-const education = (profile?.data.education ?? []) as Array<{ school: string; degree: string; year: string; }>;
+// Mejoramos el manejo de errores para la carga de proyectos
+let projects: any[] = [];
+try {
+  projects = await getCollection("projects");
+} catch (error) {
+  console.error("Error al cargar proyectos:", error);
+}
 
-const ordered = projects.sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
-const isFeatured = (p: CollectionEntry<"projects">) => featuredProjectsArray.includes(p.slug);
-const featured = ordered.filter(isFeatured);
-const rest = ordered.filter((p) => !isFeatured(p));
+// Ordenamos solo si hay proyectos
+const ordered = projects.length > 0 
+  ? projects
+      .filter((p) => p.data.hidden !== true) // <-- ocultar proyectos marcados como hidden
+      .sort((a,b) => (a.data.order ?? 0) - (b.data.order ?? 0))
+  : [];
+
+// Carrusel opcional con gallery del primer proyecto (si existe)
+const heroSlides = (ordered[0]?.data?.gallery ?? []) as string[];
 ---
-
-<Layout
-  title={`${profile?.data.name} — ${profile?.data.role}`}
-  description={profile?.data.summary ?? `${profile?.data.name} — ${profile?.data.role}`}
-  ogImage="/og.png"
->
-  <section class="container-narrow py-12 space-y-10">
-    <!-- HERO -->
-    <header class="mb-2 reveal" style="animation-delay:80ms">
-      <div class="flex items-center gap-5">
-        <!-- Foto del perfil (súbela como /me.jpg o ajusta src) -->
-        <div class="avatar shrink-0">
-          <img src="/me.jpg" alt={`Foto de ${profile?.data.name ?? "mi perfil"}`} loading="eager" decoding="async" />
-        </div>
-        <div>
-          <h1 class="heading-hero">
-            {profile?.data.name}
-            <span class="block brand-gradient">{profile?.data.role}</span>
-          </h1>
-          <p class="muted mt-1">{profile?.data.location}</p>
+<Layout title={`${name} — ${role}`} description="Portfolio · Estudios de caso">
+  <!-- Hero de ancho completo -->
+  {heroSlides.length > 0 && (
+    <section class="mx-auto px-4 md:px-8 pt-6 md:pt-10 max-w-7xl">
+      <div class="gradient-border rounded-3xl">
+        <div class="inner p-3">
+          <ShowcaseCarousel images={heroSlides.map(src=>({src, caption: ordered[0].data.title}))} class="h-[62vh] md:h-[72vh]" />
         </div>
       </div>
+    </section>
+  )}
 
-      <div class="mt-4 flex flex-wrap gap-3 links-row">
-        <a href={`mailto:${profile?.data.email}`} class="btn btn-ghost">{profile?.data.email}</a>
-        {links.map((l) => (
-          <a class="btn btn-ghost" href={l.url} target="_blank" rel="noreferrer">{l.label}</a>
-        ))}
-      </div>
-
-      <div class="mt-6 flex flex-wrap gap-3">
-        <a class="btn btn-primary" href="#proyectos">Ver proyectos</a>
-        <a class="btn" href="#cv">Experiencia</a>
-      </div>
-    </header>
-
-    <!-- Resumen con copy más persuasivo (desde profile.json) -->
-    {profile?.data.summary && (
-      <section class="reveal" style="animation-delay:160ms">
-        <h2 class="heading-2">Resumen</h2>
-        <p class="text-slate-300 leading-relaxed">{profile?.data.summary}</p>
-      </section>
-    )}
-
-    <!-- Puntos destacados -->
-    {highlights.length > 0 && (
-      <section class="reveal" style="animation-delay:220ms">
-        <h2 class="heading-2">Puntos destacados</h2>
-        <ul class="list-disc pl-6 space-y-1 text-slate-200">
-          {highlights.map((item) => (<li>{item}</li>))}
-        </ul>
-      </section>
-    )}
-
-    <!-- Habilidades -->
-    <section class="reveal" style="animation-delay:280ms">
-      <h2 class="heading-2">Habilidades</h2>
-      <div class="flex flex-wrap gap-2">
-        {skills.map((s) => (<span class="chip">{s}</span>))}
-      </div>
-      {softSkills.length > 0 && (
-        <div>
-          <h3 class="mt-6 mb-2 text-xl font-semibold">Habilidades blandas</h3>
-          <div class="flex flex-wrap gap-2">
-            {softSkills.map((s) => (<span class="chip">{s}</span>))}
+  <section class="mx-auto px-4 md:px-8 py-8 md:py-12 max-w-[1600px] lg:h-[100dvh] lg:overflow-hidden mt-8">
+    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,600px)_1fr] gap-6 md:gap-8 lg:h-full lg:min-h-0">
+      <!-- Panel izquierdo fijo (no scrolling) -->
+      <aside class="gradient-border rounded-3xl lg:h-full">
+        <div class="inner with-dots with-dots--extend p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4">
+            <button type="button" class="avatar-btn shrink-0" data-lightbox="/me.jpg" aria-label={`Ver foto de ${name}`}>
+              <img src="/me.jpg" alt={`Foto de ${name}`} class="avatar-img" width="40" height="40" loading="lazy" decoding="async" />
+            </button>
+            <span class="text-xl font-semibold">Arturo Arellano Romo</span>
+            <!-- <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block" aria-hidden="true"></span> -->
           </div>
+
+          <AnimatedHeading
+            class="text-4xl md:text-5xl font-extrabold leading-tight"
+            lines={["Diseño,", "FrontEnd / BackEnd", "Developer"]}
+            startDelay={80}
+          />
+
+          <p class="muted mt-4 max-w-prose">
+            Desarrollo soluciones digitales enfocadas en la usabilidad, rendimiento y fiabilidad de datos. <br/>Diseño e implemento interfaces limpias, accesibles y adaptadas a cada proyecto, integrando automatización y buenas prácticas para obtener software escalable y medible.
+          </p>
+
+          <!-- Bloques extras  -->
+          <div class="mt-5 grid gap-2">
+            <div class="pill">Idiomas: Inglés (B2) · Italiano (C1)</div>
+            <div class="pill">Fortalezas: Comunicación efectiva, liderazgo y gestión de proyectos, optimización de procesos, automatización de tareas y orientación al cliente.</div>
+          </div>
+
+          <div class="mt-6 flex flex-wrap items-center gap-2">
+            <a href={`mailto:${email}`} class="btn btn-icon has-tooltip" data-tip="Email" aria-label="Enviar email">
+              <!-- mail icon -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 2v.01L12 13 4 6.01V6h16ZM4 18V8.236l7.386 6.27a1 1 0 0 0 1.228 0L20 8.236V18H4Z"/></svg>
+            </a>
+            {linkedin && (
+              <a href={linkedin} target="_blank" rel="noopener noreferrer" class="btn btn-icon has-tooltip" data-tip="LinkedIn" aria-label="LinkedIn">
+                <!-- linkedin icon -->
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7 0h3.84v2.05h.05c.53-1 1.84-2.05 3.79-2.05 4.05 0 4.8 2.67 4.8 6.15V23h-4v-6.65c0-1.58-.03-3.62-2.21-3.62-2.22 0-2.56 1.73-2.56 3.51V23h-4V8z"/></svg>
+              </a>
+            )}
+            {github && (
+              <a href={github} target="_blank" rel="noopener noreferrer" class="btn btn-icon has-tooltip" data-tip="GitHub" aria-label="GitHub">
+                <!-- github icon -->
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.41-1.35-1.79-1.35-1.79-1.11-.76.08-.75.08-.75 1.23.09 1.87 1.26 1.87 1.26 1.09 1.86 2.86 1.32 3.56 1.01.11-.79.43-1.32.78-1.63-2.66-.3-5.47-1.33-5.47-5.9 0-1.3.47-2.36 1.25-3.19-.13-.31-.54-1.55.12-3.24 0 0 1.01-.32 3.31 1.22a11.52 11.52 0 0 1 6.03 0c2.3-1.54 3.31-1.22 3.31-1.22.66 1.69.25 2.93.12 3.24.78.83 1.25 1.89 1.25 3.19 0 4.58-2.81 5.59-5.49 5.89.44.38.83 1.12.83 2.26v3.35c0 .32.21.7.83.58A12 12 0 0 0 12 .5Z"/></svg>
+              </a>
+            )}
+          </div>
+
+          <RevealOnView class="mt-10" staggerChildren intensity="soft">
+            <p class="uppercase tracking-wider text-xs text-slate-400 mb-3">He trabajado en</p>
+            <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-slate-500/70 text-2xl font-semibold">
+              <a href="https://quantia.es/" target="_blank" rel="noopener noreferrer" class="opacity-80 hover:opacity-100 transition">QUANTIA Consultoría</a>
+              <span>UGR</span><span>Predisolia</span><span>Open‑source</span>
+            </div>
+          </RevealOnView>
         </div>
-      )}
-    </section>
+      </aside>
 
-    <!-- Experiencia -->
-    <section id="cv" class="reveal" style="animation-delay:320ms">
-      <h2 class="heading-2">Experiencia</h2>
-      <div class="space-y-6">
-        {experience.map((exp) => (
-          <article class="card">
-            <div class="flex items-baseline justify-between gap-4">
-              <h3 class="text-lg font-semibold">{exp.role}</h3>
-              <span class="muted text-sm">{exp.start} – {exp.end ?? "actualidad"}</span>
-            </div>
-            <div class="muted">{exp.company}</div>
-            <ul class="list-disc pl-6 mt-2 space-y-1 text-slate-200">
-              {exp.bullets.map((b) => (<li>{b}</li>))}
-            </ul>
-          </article>
+      <!-- Columna derecha: scroll interno sólo aquí en escritorio -->
+      <section id="projects-scroll" class="flex min-h-0 lg:h-full flex-col gap-6 md:gap-8 lg:pr-2 lg:overflow-y-auto">
+        <!-- se elimina el hero duplicado aquí -->
+        <div id="proyectos"></div>
+        {ordered.map((p, idx) => (
+          <CaseStudy
+            title={p.data.title}
+            subtitle={p.data.description}
+            cover={p.data.cover}
+            tags={p.data.tech ?? []}
+            repo={p.data.repo}
+            demo={p.data.demo}
+            gradientFrom={idx % 2 ? "#6d28d9" : "#0f172a"}
+            gradientTo={idx % 2 ? "#06b6d4" : "#6d28d9"}
+          />
         ))}
-      </div>
-    </section>
-
-    <!-- Proyectos -->
-    <section id="proyectos" class="reveal" style="animation-delay:360ms">
-      <h2 class="heading-2">Proyectos</h2>
-      <div class="grid gap-6 md:grid-cols-2">
-        {[...featured, ...rest].map((p) => (
-          <article class="card">
-            <h3 class="text-lg font-semibold">{p.data.title}</h3>
-            <p class="muted mt-1">{p.data.description}</p>
-            <div class="mt-3 flex flex-wrap gap-2">
-              {p.data.tech?.map((t) => (<span class="chip">{t}</span>))}
-            </div>
-            <div class="mt-4 flex gap-4 links-row">
-              {p.data.repo && (<a href={p.data.repo} target="_blank" rel="noreferrer">Repositorio</a>)}
-              {p.data.demo && (<a href={p.data.demo} target="_blank" rel="noreferrer">Demo</a>)}
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <!-- Educación -->
-    <section class="reveal" style="animation-delay:420ms">
-      <h2 class="heading-2">Educación</h2>
-      <ul class="space-y-1">
-        {education.map((e) => (
-          <li><strong>{e.degree}</strong> — {e.school} ({e.year})</li>
-        ))}
-      </ul>
-    </section>
+      </section>
+    </div>
   </section>
 
-  <!-- Revelar on-intersection (sin dependencias) -->
+  <!-- Lightbox global -->
+  <dialog class="lightbox" id="lightbox" aria-label="Vista ampliada de la imagen">
+    <img class="lightbox__img" id="lightbox-img" src="" alt="" />
+    <p class="lightbox__caption" id="lightbox-caption"></p>
+    <button class="btn lightbox__close" id="lightbox-close" aria-label="Cerrar">Cerrar ✕</button>
+  </dialog>
+
+  <!-- Datos de proyectos para respaldo en JavaScript -->
+  <script define:vars={{ projectsData: ordered.map(p => p.data) }}>
+    // Almacenamos los datos de proyectos en una variable global para el fallback
+    window.projectsData = projectsData;
+  </script>
+
   <script is:inline>
-    const els = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.style.opacity = 1; });
-    }, { threshold: 0.12 });
-    els.forEach(el => io.observe(el));
+    // Lightbox accesible
+    const dlg = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    const caption = document.getElementById('lightbox-caption');
+    const closeBtn = document.getElementById('lightbox-close');
+
+    function openLightbox(src, alt='Imagen ampliada', text=''){
+      img.src=src; img.alt=alt;
+      if (caption) caption.textContent = text || alt || '';
+      (dlg.showModal ? dlg.showModal() : dlg.setAttribute('open',''));
+    }
+    function closeLightbox(){
+      img.src=''; img.alt='';
+      if (caption) caption.textContent = '';
+      (dlg.close ? dlg.close() : dlg.removeAttribute('open'));
+    }
+
+    addEventListener('click', (e)=>{
+      const btn = e.target.closest?.('[data-lightbox]');
+      if(btn){
+        const src = btn.getAttribute('data-lightbox');
+        const alt = btn.querySelector('img')?.getAttribute('alt') ?? 'Imagen ampliada';
+        const text = btn.getAttribute('data-caption') || alt;
+        openLightbox(src, alt, text);
+      }
+    });
+    dlg?.addEventListener('click', (e)=>{ if(e.target===dlg) closeLightbox(); });
+    addEventListener('keydown', (e)=>{ if(e.key==='Escape' && dlg?.open) closeLightbox(); });
+    closeBtn?.addEventListener('click', closeLightbox);
+
+    // Scroll suave a la lista interna sólo en escritorio (lg+).
+    document.querySelectorAll('a[href="#proyectos"]').forEach((a)=>{
+      a.addEventListener('click', (e)=>{
+        const isDesktop = matchMedia('(min-width:1024px)').matches;
+        if(!isDesktop) return; // en móvil dejamos el comportamiento normal de ancla
+        const scroller = document.getElementById('projects-scroll');
+        const target = scroller?.querySelector('#proyectos');
+        if(scroller && target){
+          e.preventDefault();
+          scroller.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+        }
+      });
+    });
   </script>
 </Layout>
+

@@ -1,6 +1,6 @@
 ---
 title: "TFG — Cliente INDIGO en Python"
-description: "Cliente en Python para el ecosistema INDIGO (astronomía): control de CCD, rueda de filtros y enfocador con GUI, servidor INDIGO local para pruebas y documentación técnica."
+description: "Cliente INDIGO en Python con GUI para CCD, rueda de filtros y enfocador; servidor local para pruebas y documentación técnica con Sphinx."
 tech:
   - Python
   - Tkinter
@@ -10,7 +10,9 @@ tech:
   - Linux
 featured: false
 order: 50
-cover: ""
+cover: "/TFG.png"
+gallery:
+  - "/TFG.png"
 repo: "https://github.com/Arturo4102/TFG_indigo"
 demo: ""
 ---

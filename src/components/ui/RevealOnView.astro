@@ -1,0 +1,90 @@
+---
+interface Props {
+  as?: string;
+  class?: string;
+  delay?: number;
+  intensity?: 'soft' | 'hero';
+  staggerChildren?: boolean;
+  style?: Record<string, any>;
+}
+const {
+  as = 'div',
+  class: klass = '',
+  delay = 0,
+  intensity = 'soft',
+  staggerChildren = false,
+  style = {}
+} = Astro.props as Props;
+---
+
+<Fragment set:html={`<${as} class="${klass}" style="${Object.entries(style).map(([k,v])=>`${k}:${v}`).join(';')}"><slot /></${as}>`} />
+
+<script is:inline>
+  (function(){
+    try {
+      const wrapper = document.currentScript?.previousElementSibling;
+      if (!wrapper) return;
+
+      const startTranslate = 18;
+      const startBlur = 10;
+      const startScale = 0.98;
+
+      const targets = Array.from(wrapper.children);
+      if (targets.length === 0) return; // No animar si no hay hijos
+
+      targets.forEach(t=>{
+        // Mostrar contenido sin animación si el script falla o está desactivada la animación
+        try {
+          t.style.opacity='0';
+          t.style.transform=`translateY(${startTranslate}px) scale(${startScale})`;
+          t.style.filter=`blur(${startBlur}px)`;
+        } catch (e) {
+          console.warn("Error al preparar animación:", e);
+          t.style.opacity='1'; // Asegurar que es visible si falla
+        }
+      });
+
+      // Fallback para navegadores que no soportan IntersectionObserver
+      if (!('IntersectionObserver' in window)) {
+        targets.forEach(t => {
+          t.style.opacity = '1';
+          t.style.transform = 'none';
+          t.style.filter = 'none';
+        });
+        return;
+      }
+
+      const io = new IntersectionObserver((entries)=>{
+        if (!entries.some(e=>e.isIntersecting)) return;
+        targets.forEach((t,idx)=>{
+          try {
+            t.animate([
+              {opacity:0, transform:`translateY(${startTranslate}px) scale(${startScale})`, filter:`blur(${startBlur}px)`},
+              {opacity:1, transform:'translateY(0) scale(1)', filter:'blur(0px)'}
+            ], { duration:950, delay: idx*120, easing:'cubic-bezier(0.22,1,0.36,1)', fill:'forwards' });
+          } catch (e) {
+            console.warn("Error al animar:", e);
+            t.style.opacity = '1';
+            t.style.transform = 'none';
+            t.style.filter = 'none';
+          }
+        });
+        io.disconnect();
+      }, { threshold:0.15 });
+      
+      try {
+        io.observe(wrapper);
+      } catch (e) {
+        console.warn("Error al observar elemento:", e);
+        // Mostrar sin animación si falla la observación
+        targets.forEach(t => {
+          t.style.opacity = '1';
+          t.style.transform = 'none';
+          t.style.filter = 'none';
+        });
+      }
+    } catch (err) {
+      console.error("Error en RevealOnView:", err);
+    }
+  })();
+</script>
