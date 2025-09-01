@@ -2,10 +2,16 @@
 interface Slide { src: string; caption?: string; from?: string; to?: string }
 interface Props { images: Slide[]; class?: string }
 
-const placeholder = "/993506.png";
+// BASE_URL para soportar GitHub Pages (subcarpeta)
+const BASE = import.meta.env.BASE_URL || "/";
+const withBase = (p?: string) => (p && p.startsWith("/")) ? `${BASE}${p.slice(1)}` : (p ?? "");
+
+const placeholderRaw = "/Astro-banner.jpg";
+const placeholder = withBase(placeholderRaw);
 
 const { images, class: klass = "" } = Astro.props as Props;
-const slides = (images?.length ? images : [{ src: placeholder }]).map(s => ({ ...s, src: s.src || placeholder }));
+const slides = (images?.length ? images : [{ src: placeholder }])
+  .map(s => ({ ...s, src: withBase(s.src) || placeholder }));
 ---
 <div class={`h-full w-full overflow-x-auto overflow-y-hidden rounded-[1.35rem] bg-black/40 scroll-smooth ${klass}`} aria-label="Project showcase">
   <div class="flex h-full min-w-full snap-x snap-mandatory gap-4 p-2">

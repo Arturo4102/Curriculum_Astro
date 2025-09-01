@@ -5,7 +5,9 @@ tech:
   - Python
 featured: false
 order: 1
-cover: ""
+cover: "/Ecommerce.png"
+gallery:
+  - "/Ecommerce.png"
 repo: "https://github.com/Arturo4102/E-commerce_Python"
 demo: ""
 ---

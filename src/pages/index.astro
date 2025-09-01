@@ -3,13 +3,16 @@ import Layout from "../layouts/Layout.astro";
 import AnimatedHeading from "../components/ui/AnimatedHeading.astro";
 import RevealOnView from "../components/ui/RevealOnView.astro";
 import CaseStudy from "../components/CaseStudy.astro";
-import ShowcaseCarousel from "../components/ShowcaseCarousel.astro";
 import { getEntry, getCollection } from "astro:content";
+
+// Prefijo base (GitHub Pages + local)
+const BASE = import.meta.env.BASE_URL || "/";
+const withBase = (p?: string) => (p && p.startsWith("/")) ? `${BASE}${p.slice(1)}` : p;
 
 const profile = await getEntry("cv", "profile")?.catch(() => null);
 const name = profile?.data?.name ?? "Arturo Arellano Romo";
 const role = profile?.data?.role ?? "Frontend / Full-Stack Developer";
-const location = profile?.data?.location ?? "España";
+// const location = profile?.data?.location ?? "España";
 const email = profile?.data?.email ?? "arturoarellano4102@gmail.com";
 // extrae redes sociales desde profile.json
 const links = profile?.data?.links ?? [];
@@ -31,20 +34,9 @@ const ordered = projects.length > 0
       .sort((a,b) => (a.data.order ?? 0) - (b.data.order ?? 0))
   : [];
 
-// Carrusel opcional con gallery del primer proyecto (si existe)
-const heroSlides = (ordered[0]?.data?.gallery ?? []) as string[];
 ---
 <Layout title={`${name} — ${role}`} description="Portfolio · Estudios de caso">
-  <!-- Hero de ancho completo -->
-  {heroSlides.length > 0 && (
-    <section class="mx-auto px-4 md:px-8 pt-6 md:pt-10 max-w-7xl">
-      <div class="gradient-border rounded-3xl">
-        <div class="inner p-3">
-          <ShowcaseCarousel images={heroSlides.map(src=>({src, caption: ordered[0].data.title}))} class="h-[62vh] md:h-[72vh]" />
-        </div>
-      </div>
-    </section>
-  )}
+
 
   <section class="mx-auto px-4 md:px-8 py-8 md:py-12 max-w-[1600px] lg:h-[100dvh] lg:overflow-hidden mt-8">
     <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,600px)_1fr] gap-6 md:gap-8 lg:h-full lg:min-h-0">
@@ -52,8 +44,8 @@ const heroSlides = (ordered[0]?.data?.gallery ?? []) as string[];
       <aside class="gradient-border rounded-3xl lg:h-full">
         <div class="inner with-dots with-dots--extend p-6 md:p-8">
           <div class="flex items-center gap-3 mb-4">
-            <button type="button" class="avatar-btn shrink-0" data-lightbox="/me.jpg" aria-label={`Ver foto de ${name}`}>
-              <img src="/me.jpg" alt={`Foto de ${name}`} class="avatar-img" width="40" height="40" loading="lazy" decoding="async" />
+            <button type="button" class="avatar-btn shrink-0" data-lightbox={withBase("/me.jpg")} aria-label={`Ver foto de ${name}`}>
+              <img src={withBase("/me.jpg")} alt={`Foto de ${name}`} class="avatar-img" width="40" height="40" loading="lazy" decoding="async" />
             </button>
             <span class="text-xl font-semibold">Arturo Arellano Romo</span>
             <!-- <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block" aria-hidden="true"></span> -->
@@ -112,7 +104,7 @@ const heroSlides = (ordered[0]?.data?.gallery ?? []) as string[];
           <CaseStudy
             title={p.data.title}
             subtitle={p.data.description}
-            cover={p.data.cover}
+            cover={withBase(p.data.cover)}
             tags={p.data.tech ?? []}
             repo={p.data.repo}
             demo={p.data.demo}

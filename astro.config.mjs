@@ -8,7 +8,8 @@ import tailwind from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://localhost:5000",
+  site: "https://arturo4102.github.io",   // <- dominio base
+  base: "/Curriculum_Vitae/",             // <- subcarpeta del repo
   output: "static",
   vite:{
     plugins:[tailwind()]

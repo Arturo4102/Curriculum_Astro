@@ -7,12 +7,13 @@ tech:
   - CSS
   - Git
   - Github
-cover: ""
+cover: "/Astro-banner.jpg"
+gallery:
+  - "/Astro-banner.jpg"
 repo: "https://github.com/Arturo4102/Curriculum_Astro"
 demo: ""
 featured: false
 order: 2
-hidden: true
 ---
 
 Estructura clara, contenido gestionado con Content Collections y despliegues automatizados.

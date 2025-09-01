@@ -10,7 +10,12 @@ interface Props {
   gradientTo?: string;
 }
 
-const placeholder = "/993506.png";
+// BASE_URL para soportar GitHub Pages
+const BASE = import.meta.env.BASE_URL || "/";
+const withBase = (p?: string) => (p && p.startsWith("/")) ? `${BASE}${p.slice(1)}` : (p ?? "");
+
+const placeholderRaw = "/Astro-banner.jpg";
+const placeholder = withBase(placeholderRaw);
 
 const {
   title,
@@ -24,7 +29,7 @@ const {
 } = Astro.props as Props;
 
 // Use placeholder if cover is empty or undefined
-const imageSrc = cover && cover.trim() !== "" ? cover : placeholder;
+const imageSrc = (cover && cover.trim() !== "" ? cover : placeholder);
 ---
 <article class="relative w-full">
   <div
