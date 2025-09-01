@@ -1,4 +1,7 @@
-@import "tailwindcss";
+/* Reemplaza Tailwind v4 por v3 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* ===== Tokens & Tema ===== */
 :root {
