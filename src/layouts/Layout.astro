@@ -4,7 +4,9 @@ const { title = "Portfolio", description = "Proyectos y CV", ogImage = "/og.png"
 
 // Prefijo seguro para rutas en GitHub Pages y local
 const BASE = import.meta.env.BASE_URL || "/";
-const ogImageUrl = `${BASE}${(ogImage || "/og.png").replace(/^\//, "")}`;
+// Construye ruta con base y conviértela a absoluta usando Astro.site
+const ogPath = `${BASE}${(ogImage || "/og.png").replace(/^\//, "")}`;
+const ogImageUrl = new URL(ogPath, Astro.site).toString();
 ---
 <!doctype html>
 <html lang="es">
