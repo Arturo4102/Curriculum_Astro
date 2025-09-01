@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="es"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Arturo Arellano Romo — Frontend / Backend Developer</title><meta name="description" content="Portfolio · Estudios de caso"><meta property="og:title" content="Arturo Arellano Romo — Frontend / Backend Developer"><meta property="og:description" content="Portfolio · Estudios de caso"><meta property="og:image" content="https://arturo4102.github.io/Curriculum_Astro/og.png"><meta name="theme-color" content="#0f172a"><script>
+      const pref = localStorage.getItem('theme');
+      const sys = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      const theme = pref || sys;
+      document.documentElement.classList.toggle('theme-light', theme === 'light');
+      document.documentElement.classList.toggle('theme-dark', theme !== 'light');
+    </script><link rel="stylesheet" href="/Curriculum_Astro/_astro/index.BXPOwcwJ.css"></head> <body> <a href="#contenido" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-white/10 px-3 py-2 rounded">Saltar al contenido</a> <!-- Toggle tema --> <button id="theme-toggle" class="btn fixed top-3 right-3 z-50" aria-label="Cambiar tema">🌓</button> <main id="contenido"> <section class="mx-auto px-4 md:px-8 py-8 md:py-12 max-w-[1600px] lg:h-[100dvh] lg:overflow-hidden mt-8"> <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,600px)_1fr] gap-6 md:gap-8 lg:h-full lg:min-h-0"> <!-- Panel izquierdo fijo (no scrolling) --> <aside class="gradient-border rounded-3xl lg:h-full"> <div class="inner with-dots with-dots--extend p-6 md:p-8"> <div class="flex items-center gap-3 mb-4"> <button type="button" class="avatar-btn shrink-0" data-lightbox="/Curriculum_Astro/me.jpg" aria-label="Ver foto de Arturo Arellano Romo"> <img src="/Curriculum_Astro/me.jpg" alt="Foto de Arturo Arellano Romo" class="avatar-img" width="40" height="40" loading="lazy" decoding="async"> </button> <span class="text-xl font-semibold">Arturo Arellano Romo</span> <!-- <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block" aria-hidden="true"></span> --> </div> <h1 class="text-4xl md:text-5xl font-extrabold leading-tight" aria-label="Diseño, FrontEnd / BackEnd Developer"> <span aria-hidden="true"> <span class="block"> <span data-word data-line-index="0" class="inline-block will-change-transform">Diseño,</span> </span><span class="block"> <span data-word data-line-index="1" class="inline-block will-change-transform">FrontEnd</span><span>&nbsp;</span><span data-word data-line-index="1" class="inline-block will-change-transform">/</span><span>&nbsp;</span><span data-word data-line-index="1" class="inline-block will-change-transform">BackEnd</span> </span><span class="block"> <span data-word data-line-index="2" class="inline-block will-change-transform">Developer</span> </span> </span> </h1> <script>(function(){const startDelay = 80;
+const durationPerWord = 900;
+const staggerPerWord = 80;
+const lineDelay = 300;
+const fromBlurPx = 16;
+const fromTranslateYPx = 14;
+
+  (function(){
+    try {
+      const root = document.currentScript?.previousElementSibling;
+      if (!root) {
+        console.warn("AnimatedHeading: Could not find root element");
+        return;
+      }
+      
+      const words = Array.from(root.querySelectorAll('[data-word]'));
+      if (words.length === 0) {
+        console.warn("AnimatedHeading: No words found to animate");
+        return;
+      }
+      
+      // Inicializar todos los elementos con estados iniciales
+      words.forEach(w => {
+        try {
+          w.style.opacity = '0';
+          w.style.filter = `blur(${fromBlurPx}px)`;
+          w.style.transform = `translateY(${fromTranslateYPx}px)`;
+        } catch(e) {
+          console.warn("Error setting initial styles:", e);
+          w.style.opacity = '1'; // Asegurar visibilidad si falla
+        }
+      });
+      
+      // Fallback para navegadores sin IntersectionObserver
+      if (!('IntersectionObserver' in window)) {
+        words.forEach(w => {
+          w.style.opacity = '1';
+          w.style.filter = 'none';
+          w.style.transform = 'none';
+        });
+        return;
+      }
+      
+      // Agrupar palabras por línea para animar
+      const map = new Map();
+      words.forEach(w => {
+        const i = Number(w.getAttribute('data-line-index') || 0);
+        const arr = map.get(i) || [];
+        if (!map.has(i)) map.set(i, arr);
+        arr.push(w);
+      });
+      
+      // Observar y animar cuando sea visible
+      const io = new IntersectionObserver((entries) => {
+        if (!entries.some(e => e.isIntersecting)) return;
+        
+        map.forEach((arr, i) => {
+          arr.forEach((w, j) => {
+            try {
+              const delay = startDelay + i * lineDelay + j * staggerPerWord;
+              w.animate([
+                {opacity: 0, filter: `blur(${fromBlurPx}px)`, transform: `translateY(${fromTranslateYPx}px)`},
+                {opacity: 1, filter: 'blur(0px)', transform: 'translateY(0)'}
+              ], {
+                duration: durationPerWord, 
+                delay, 
+                easing: 'cubic-bezier(0.22,1,0.36,1)', 
+                fill: 'forwards'
+              });
+            } catch(e) {
+              console.warn("Error animating word:", e);
+              w.style.opacity = '1';
+              w.style.filter = 'none';
+              w.style.transform = 'none';
+            }
+          });
+        });
+        
+        io.disconnect();
+      }, { threshold: 0.2 });
+      
+      io.observe(root);
+    } catch(err) {
+      console.error("AnimatedHeading error:", err);
+      // Si todo falla, mostrar el contenido
+      document.querySelectorAll('[data-word]').forEach(el => {
+        el.style.opacity = '1';
+        el.style.filter = 'none';
+        el.style.transform = 'none';
+      });
+    }
+  })();
+})();</script> <p class="muted mt-4 max-w-prose">
+Desarrollo soluciones digitales enfocadas en la usabilidad, rendimiento y fiabilidad de datos. <br>Diseño e implemento interfaces limpias, accesibles y adaptadas a cada proyecto, integrando automatización y buenas prácticas para obtener software escalable y medible.
+</p> <!-- Bloques extras  --> <div class="mt-5 grid gap-2"> <div class="pill">Idiomas: Inglés (B2) · Italiano (C1)</div> <div class="pill">Fortalezas: Comunicación efectiva, liderazgo y gestión de proyectos, optimización de procesos, automatización de tareas y orientación al cliente.</div> </div> <div class="mt-6 flex flex-wrap items-center gap-2"> <a href="mailto:arturoarellano4102@gmail.com" class="btn btn-icon has-tooltip" data-tip="Email" aria-label="Enviar email"> <!-- mail icon --> <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 2v.01L12 13 4 6.01V6h16ZM4 18V8.236l7.386 6.27a1 1 0 0 0 1.228 0L20 8.236V18H4Z"></path></svg> </a> <a href="https://www.linkedin.com/in/arturo-arellano-romo/" target="_blank" rel="noopener noreferrer" class="btn btn-icon has-tooltip" data-tip="LinkedIn" aria-label="LinkedIn"> <!-- linkedin icon --> <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7 0h3.84v2.05h.05c.53-1 1.84-2.05 3.79-2.05 4.05 0 4.8 2.67 4.8 6.15V23h-4v-6.65c0-1.58-.03-3.62-2.21-3.62-2.22 0-2.56 1.73-2.56 3.51V23h-4V8z"></path></svg> </a> <a href="https://github.com/Arturo4102" target="_blank" rel="noopener noreferrer" class="btn btn-icon has-tooltip" data-tip="GitHub" aria-label="GitHub"> <!-- github icon --> <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.41-1.35-1.79-1.35-1.79-1.11-.76.08-.75.08-.75 1.23.09 1.87 1.26 1.87 1.26 1.09 1.86 2.86 1.32 3.56 1.01.11-.79.43-1.32.78-1.63-2.66-.3-5.47-1.33-5.47-5.9 0-1.3.47-2.36 1.25-3.19-.13-.31-.54-1.55.12-3.24 0 0 1.01-.32 3.31 1.22a11.52 11.52 0 0 1 6.03 0c2.3-1.54 3.31-1.22 3.31-1.22.66 1.69.25 2.93.12 3.24.78.83 1.25 1.89 1.25 3.19 0 4.58-2.81 5.59-5.49 5.89.44.38.83 1.12.83 2.26v3.35c0 .32.21.7.83.58A12 12 0 0 0 12 .5Z"></path></svg> </a> </div> <div class="mt-10" style=""><slot /></div><script>
+  (function(){
+    try {
+      const wrapper = document.currentScript?.previousElementSibling;
+      if (!wrapper) return;
+
+      const startTranslate = 18;
+      const startBlur = 10;
+      const startScale = 0.98;
+
+      const targets = Array.from(wrapper.children);
+      if (targets.length === 0) return; // No animar si no hay hijos
+
+      targets.forEach(t=>{
+        // Mostrar contenido sin animación si el script falla o está desactivada la animación
+        try {
+          t.style.opacity='0';
+          t.style.transform=`translateY(${startTranslate}px) scale(${startScale})`;
+          t.style.filter=`blur(${startBlur}px)`;
+        } catch (e) {
+          console.warn("Error al preparar animación:", e);
+          t.style.opacity='1'; // Asegurar que es visible si falla
+        }
+      });
+
+      // Fallback para navegadores que no soportan IntersectionObserver
+      if (!('IntersectionObserver' in window)) {
+        targets.forEach(t => {
+          t.style.opacity = '1';
+          t.style.transform = 'none';
+          t.style.filter = 'none';
+        });
+        return;
+      }
+
+      const io = new IntersectionObserver((entries)=>{
+        if (!entries.some(e=>e.isIntersecting)) return;
+        targets.forEach((t,idx)=>{
+          try {
+            t.animate([
+              {opacity:0, transform:`translateY(${startTranslate}px) scale(${startScale})`, filter:`blur(${startBlur}px)`},
+              {opacity:1, transform:'translateY(0) scale(1)', filter:'blur(0px)'}
+            ], { duration:950, delay: idx*120, easing:'cubic-bezier(0.22,1,0.36,1)', fill:'forwards' });
+          } catch (e) {
+            console.warn("Error al animar:", e);
+            t.style.opacity = '1';
+            t.style.transform = 'none';
+            t.style.filter = 'none';
+          }
+        });
+        io.disconnect();
+      }, { threshold:0.15 });
+      
+      try {
+        io.observe(wrapper);
+      } catch (e) {
+        console.warn("Error al observar elemento:", e);
+        // Mostrar sin animación si falla la observación
+        targets.forEach(t => {
+          t.style.opacity = '1';
+          t.style.transform = 'none';
+          t.style.filter = 'none';
+        });
+      }
+    } catch (err) {
+      console.error("Error en RevealOnView:", err);
+    }
+  })();
+</script> </div> </aside> <!-- Columna derecha: scroll interno sólo aquí en escritorio --> <section id="projects-scroll" class="flex min-h-0 lg:h-full flex-col gap-6 md:gap-8 lg:pr-2 lg:overflow-y-auto"> <!-- se elimina el hero duplicado aquí --> <div id="proyectos"></div> <article class="relative w-full"> <div class="gradient-border rounded-3xl" style="background-image:linear-gradient(135deg, #0f172a, #6d28d9)"> <div class="inner relative overflow-hidden rounded-[1.35rem] bg-black"> <button type="button" class="group block w-full text-left focus:outline-none" data-lightbox="/Curriculum_Astro/Ecommerce.png" data-caption="E‑commerce realizado con Python — Proyecto de e‑commerce desarrollado en Python. Incluye lógica de negocio, gestión de productos y pedidos, y estructura lista para ampliar." aria-label="Ampliar imagen de E‑commerce realizado con Python"> <img src="/Curriculum_Astro/Ecommerce.png" alt="E‑commerce realizado con Python" class="w-full h-[56vh] md:h-[62vh] object-cover transition group-hover:scale-[1.02]" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/Curriculum_Astro/Astro-banner.jpg';"> <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/30"></div> </button> <div class="absolute left-4 top-4 flex flex-wrap gap-2"> <span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Python</span> </div> <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5"> <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"> <div class="case-caption max-w-[80%] sm:max-w-[70%]"> <h3 class="text-lg font-semibold sm:text-xl">E‑commerce realizado con Python</h3> <p class="text-sm opacity-90">Proyecto de e‑commerce desarrollado en Python. Incluye lógica de negocio, gestión de productos y pedidos, y estructura lista para ampliar.</p> </div> <div class="flex gap-2"> <a class="case-action" href="https://github.com/Arturo4102/E-commerce_Python" target="_blank" rel="noreferrer">Repo →</a>  </div> </div> </div> </div> </div> </article><article class="relative w-full"> <div class="gradient-border rounded-3xl" style="background-image:linear-gradient(135deg, #6d28d9, #06b6d4)"> <div class="inner relative overflow-hidden rounded-[1.35rem] bg-black"> <button type="button" class="group block w-full text-left focus:outline-none" data-lightbox="/Curriculum_Astro/Predisolia.png" data-caption="Plataforma de Predicción y Gestión de Activos Solares — Dashboard de monitorización fotovoltaica con React+TypeScript: gráficas (ApexCharts), tablas filtrables y flujos CRUD. Enfoque en UX, métricas y entregas iterativas." aria-label="Ampliar imagen de Plataforma de Predicción y Gestión de Activos Solares"> <img src="/Curriculum_Astro/Predisolia.png" alt="Plataforma de Predicción y Gestión de Activos Solares" class="w-full h-[56vh] md:h-[62vh] object-cover transition group-hover:scale-[1.02]" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/Curriculum_Astro/Astro-banner.jpg';"> <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/30"></div> </button> <div class="absolute left-4 top-4 flex flex-wrap gap-2"> <span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">React</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">TypeScript</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">ApexCharts</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">CSS</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Git</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Github</span> </div> <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5"> <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"> <div class="case-caption max-w-[80%] sm:max-w-[70%]"> <h3 class="text-lg font-semibold sm:text-xl">Plataforma de Predicción y Gestión de Activos Solares</h3> <p class="text-sm opacity-90">Dashboard de monitorización fotovoltaica con React+TypeScript: gráficas (ApexCharts), tablas filtrables y flujos CRUD. Enfoque en UX, métricas y entregas iterativas.</p> </div> <div class="flex gap-2"> <a class="case-action" href="https://github.com/Arturo4102" target="_blank" rel="noreferrer">Repo →</a>  </div> </div> </div> </div> </div> </article><article class="relative w-full"> <div class="gradient-border rounded-3xl" style="background-image:linear-gradient(135deg, #0f172a, #6d28d9)"> <div class="inner relative overflow-hidden rounded-[1.35rem] bg-black"> <button type="button" class="group block w-full text-left focus:outline-none" data-lightbox="/Curriculum_Astro/Astro-banner.jpg" data-caption="Portfolio con Astro — Sitio personal rápido y accesible con Astro: animaciones suaves sin frameworks, Content Collections y despliegue automatizado. Optimizado para rendimiento y DX." aria-label="Ampliar imagen de Portfolio con Astro"> <img src="/Curriculum_Astro/Astro-banner.jpg" alt="Portfolio con Astro" class="w-full h-[56vh] md:h-[62vh] object-cover transition group-hover:scale-[1.02]" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/Curriculum_Astro/Astro-banner.jpg';"> <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/30"></div> </button> <div class="absolute left-4 top-4 flex flex-wrap gap-2"> <span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Astro</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">TypeScript</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">CSS</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Git</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Github</span> </div> <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5"> <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"> <div class="case-caption max-w-[80%] sm:max-w-[70%]"> <h3 class="text-lg font-semibold sm:text-xl">Portfolio con Astro</h3> <p class="text-sm opacity-90">Sitio personal rápido y accesible con Astro: animaciones suaves sin frameworks, Content Collections y despliegue automatizado. Optimizado para rendimiento y DX.</p> </div> <div class="flex gap-2"> <a class="case-action" href="https://github.com/Arturo4102/Curriculum_Astro" target="_blank" rel="noreferrer">Repo →</a>  </div> </div> </div> </div> </div> </article><article class="relative w-full"> <div class="gradient-border rounded-3xl" style="background-image:linear-gradient(135deg, #6d28d9, #06b6d4)"> <div class="inner relative overflow-hidden rounded-[1.35rem] bg-black"> <button type="button" class="group block w-full text-left focus:outline-none" data-lightbox="/Curriculum_Astro/TFG.png" data-caption="TFG — Cliente INDIGO en Python — Cliente INDIGO en Python con GUI para CCD, rueda de filtros y enfocador; servidor local para pruebas y documentación técnica con Sphinx." aria-label="Ampliar imagen de TFG — Cliente INDIGO en Python"> <img src="/Curriculum_Astro/TFG.png" alt="TFG — Cliente INDIGO en Python" class="w-full h-[56vh] md:h-[62vh] object-cover transition group-hover:scale-[1.02]" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/Curriculum_Astro/Astro-banner.jpg';"> <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/30"></div> </button> <div class="absolute left-4 top-4 flex flex-wrap gap-2"> <span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Python</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Tkinter</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">INDIGO</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Make</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Sphinx</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Linux</span> </div> <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5"> <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"> <div class="case-caption max-w-[80%] sm:max-w-[70%]"> <h3 class="text-lg font-semibold sm:text-xl">TFG — Cliente INDIGO en Python</h3> <p class="text-sm opacity-90">Cliente INDIGO en Python con GUI para CCD, rueda de filtros y enfocador; servidor local para pruebas y documentación técnica con Sphinx.</p> </div> <div class="flex gap-2"> <a class="case-action" href="https://github.com/Arturo4102/TFG_indigo" target="_blank" rel="noreferrer">Repo →</a>  </div> </div> </div> </div> </div> </article><article class="relative w-full"> <div class="gradient-border rounded-3xl" style="background-image:linear-gradient(135deg, #0f172a, #6d28d9)"> <div class="inner relative overflow-hidden rounded-[1.35rem] bg-black"> <button type="button" class="group block w-full text-left focus:outline-none" data-lightbox="/Curriculum_Astro/Aplicacion_Accesible.jpg" data-caption="Aplicación Web Accesible — Ionic/Angular — App híbrida con Ionic+Angular y Capacitor: integración Firebase, tooling y estructura Android/iOS. Práctica de DGP orientada a accesibilidad para personas con discapacidad física, cognitiva o mental." aria-label="Ampliar imagen de Aplicación Web Accesible — Ionic/Angular"> <img src="/Curriculum_Astro/Aplicacion_Accesible.jpg" alt="Aplicación Web Accesible — Ionic/Angular" class="w-full h-[56vh] md:h-[62vh] object-cover transition group-hover:scale-[1.02]" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/Curriculum_Astro/Astro-banner.jpg';"> <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/30"></div> </button> <div class="absolute left-4 top-4 flex flex-wrap gap-2"> <span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Ionic</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Angular</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Capacitor</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">TypeScript</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Firebase</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">SCSS</span> </div> <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5"> <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"> <div class="case-caption max-w-[80%] sm:max-w-[70%]"> <h3 class="text-lg font-semibold sm:text-xl">Aplicación Web Accesible — Ionic/Angular</h3> <p class="text-sm opacity-90">App híbrida con Ionic+Angular y Capacitor: integración Firebase, tooling y estructura Android/iOS. Práctica de DGP orientada a accesibilidad para personas con discapacidad física, cognitiva o mental.</p> </div> <div class="flex gap-2"> <a class="case-action" href="https://github.com/Arturo4102/Aplicacion-Web-Accesible" target="_blank" rel="noreferrer">Repo →</a>  </div> </div> </div> </div> </div> </article><article class="relative w-full"> <div class="gradient-border rounded-3xl" style="background-image:linear-gradient(135deg, #6d28d9, #06b6d4)"> <div class="inner relative overflow-hidden rounded-[1.35rem] bg-black"> <button type="button" class="group block w-full text-left focus:outline-none" data-lightbox="/Curriculum_Astro/Videojuego.png" data-caption="Erascape — Videojuego en Unity — Juego 3D colaborativo en Unity: gameplay en C#, materiales y shaders (ShaderLab/HLSL). Coordinación internacional y control de versiones." aria-label="Ampliar imagen de Erascape — Videojuego en Unity"> <img src="/Curriculum_Astro/Videojuego.png" alt="Erascape — Videojuego en Unity" class="w-full h-[56vh] md:h-[62vh] object-cover transition group-hover:scale-[1.02]" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/Curriculum_Astro/Astro-banner.jpg';"> <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/30"></div> </button> <div class="absolute left-4 top-4 flex flex-wrap gap-2"> <span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">Unity</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">C#</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">ShaderLab</span><span class="pill bg-black/50 text-white border-white/20 backdrop-blur-sm">HLSL</span> </div> <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5"> <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"> <div class="case-caption max-w-[80%] sm:max-w-[70%]"> <h3 class="text-lg font-semibold sm:text-xl">Erascape — Videojuego en Unity</h3> <p class="text-sm opacity-90">Juego 3D colaborativo en Unity: gameplay en C#, materiales y shaders (ShaderLab/HLSL). Coordinación internacional y control de versiones.</p> </div> <div class="flex gap-2"> <a class="case-action" href="https://github.com/Arturo4102/Videojuego-Unity" target="_blank" rel="noreferrer">Repo →</a>  </div> </div> </div> </div> </div> </article> </section> </div> </section>  <dialog class="lightbox" id="lightbox" aria-label="Vista ampliada de la imagen"> <img class="lightbox__img" id="lightbox-img" src="" alt=""> <p class="lightbox__caption" id="lightbox-caption"></p> <button class="btn lightbox__close" id="lightbox-close" aria-label="Cerrar">Cerrar ✕</button> </dialog>  <script>(function(){const projectsData = [{"title":"E‑commerce realizado con Python","description":"Proyecto de e‑commerce desarrollado en Python. Incluye lógica de negocio, gestión de productos y pedidos, y estructura lista para ampliar.","tech":["Python"],"cover":"/Ecommerce.png","repo":"https://github.com/Arturo4102/E-commerce_Python","demo":"","featured":false,"order":1,"gallery":["/Ecommerce.png"]},{"title":"Plataforma de Predicción y Gestión de Activos Solares","description":"Dashboard de monitorización fotovoltaica con React+TypeScript: gráficas (ApexCharts), tablas filtrables y flujos CRUD. Enfoque en UX, métricas y entregas iterativas.","tech":["React","TypeScript","ApexCharts","CSS","Git","Github"],"cover":"/Predisolia.png","repo":"https://github.com/Arturo4102","demo":"","featured":true,"order":1,"gallery":["/Predisolia.png"]},{"title":"Portfolio con Astro","description":"Sitio personal rápido y accesible con Astro: animaciones suaves sin frameworks, Content Collections y despliegue automatizado. Optimizado para rendimiento y DX.","tech":["Astro","TypeScript","CSS","Git","Github"],"cover":"/Astro-banner.jpg","repo":"https://github.com/Arturo4102/Curriculum_Astro","demo":"","featured":false,"order":2,"gallery":["/Astro-banner.jpg"]},{"title":"TFG — Cliente INDIGO en Python","description":"Cliente INDIGO en Python con GUI para CCD, rueda de filtros y enfocador; servidor local para pruebas y documentación técnica con Sphinx.","tech":["Python","Tkinter","INDIGO","Make","Sphinx","Linux"],"cover":"/TFG.png","repo":"https://github.com/Arturo4102/TFG_indigo","demo":"","featured":false,"order":50,"gallery":["/TFG.png"]},{"title":"Aplicación Web Accesible — Ionic/Angular","description":"App híbrida con Ionic+Angular y Capacitor: integración Firebase, tooling y estructura Android/iOS. Práctica de DGP orientada a accesibilidad para personas con discapacidad física, cognitiva o mental.","tech":["Ionic","Angular","Capacitor","TypeScript","Firebase","SCSS"],"cover":"/Aplicacion_Accesible.jpg","repo":"https://github.com/Arturo4102/Aplicacion-Web-Accesible","demo":"","featured":false,"order":60,"gallery":["/Aplicacion_Accesible.jpg"]},{"title":"Erascape — Videojuego en Unity","description":"Juego 3D colaborativo en Unity: gameplay en C#, materiales y shaders (ShaderLab/HLSL). Coordinación internacional y control de versiones.","tech":["Unity","C#","ShaderLab","HLSL"],"cover":"/Videojuego.png","repo":"https://github.com/Arturo4102/Videojuego-Unity","demo":"","featured":false,"order":70,"gallery":["/Videojuego.png"]}];
+
+    // Almacenamos los datos de proyectos en una variable global para el fallback
+    window.projectsData = projectsData;
+  })();</script> <script>
+    // Lightbox accesible
+    const dlg = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    const caption = document.getElementById('lightbox-caption');
+    const closeBtn = document.getElementById('lightbox-close');
+
+    function openLightbox(src, alt='Imagen ampliada', text=''){
+      img.src=src; img.alt=alt;
+      if (caption) caption.textContent = text || alt || '';
+      (dlg.showModal ? dlg.showModal() : dlg.setAttribute('open',''));
+    }
+    function closeLightbox(){
+      img.src=''; img.alt='';
+      if (caption) caption.textContent = '';
+      (dlg.close ? dlg.close() : dlg.removeAttribute('open'));
+    }
+
+    addEventListener('click', (e)=>{
+      const btn = e.target.closest?.('[data-lightbox]');
+      if(btn){
+        const src = btn.getAttribute('data-lightbox');
+        const alt = btn.querySelector('img')?.getAttribute('alt') ?? 'Imagen ampliada';
+        const text = btn.getAttribute('data-caption') || alt;
+        openLightbox(src, alt, text);
+      }
+    });
+    dlg?.addEventListener('click', (e)=>{ if(e.target===dlg) closeLightbox(); });
+    addEventListener('keydown', (e)=>{ if(e.key==='Escape' && dlg?.open) closeLightbox(); });
+    closeBtn?.addEventListener('click', closeLightbox);
+
+    // Scroll suave a la lista interna sólo en escritorio (lg+).
+    document.querySelectorAll('a[href="#proyectos"]').forEach((a)=>{
+      a.addEventListener('click', (e)=>{
+        const isDesktop = matchMedia('(min-width:1024px)').matches;
+        if(!isDesktop) return; // en móvil dejamos el comportamiento normal de ancla
+        const scroller = document.getElementById('projects-scroll');
+        const target = scroller?.querySelector('#proyectos');
+        if(scroller && target){
+          e.preventDefault();
+          scroller.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+        }
+      });
+    });
+  </script> </main> <script>
+      const btn = document.getElementById('theme-toggle');
+      btn?.addEventListener('click', () => {
+        const html = document.documentElement;
+        const light = html.classList.toggle('theme-light');
+        html.classList.toggle('theme-dark', !light);
+        localStorage.setItem('theme', light ? 'light' : 'dark');
+      });
+    </script> </body> </html>
